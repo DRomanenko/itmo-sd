@@ -1,0 +1,54 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<head>
+    <title th:text="'Tasks from ' + ${taskList.title}"></title>
+</head>
+<body>
+
+<div>
+    <h1 th:text="'Tasks from ' + ${taskList.title}"></h1>
+    <form method="GET" action="/task-lists">
+        <input type="submit" th:value="Back">
+    </form>
+</div>
+
+<div>
+    <th:block th:each="task : ${tasks}">
+        <div>
+            <h3 th:text="${task.title}"></h3>
+            <div th:text="${task.description}"></div>
+            <div>
+                <form style="margin: 0; display: inline-block" method="POST" action="/task-done">
+                    <input type="submit" th:value="${task.done ? 'Not done' : 'Done'}">
+                    <input type="hidden" name="id" th:value="${task.id}">
+                    <input type="hidden" name="listId" th:value="${task.listId}">
+                    <input type="hidden" name="done" th:value="${!task.done}">
+                </form>
+                <form style="margin: 0; display: inline-block" method="POST" action="/delete-task">
+                    <input type="submit" value="Delete">
+                    <input type="hidden" name="id" th:value="${task.id}">
+                    <input type="hidden" name="listId" th:value="${task.listId}">
+                </form>
+            </div>
+        </div>
+    </th:block>
+</div>
+
+<h1>Add new task</h1>
+<form th:object="${task}" method="POST" action="/add-task">
+    <table>
+        <tr>
+            <td><label for="title">Title:</label></td>
+            <td><input required="required" id="title" type="text" th:field="*{title}"/></td>
+        </tr>
+        <tr>
+            <td><label for="description">Description:</label></td>
+            <td><textarea id="description" th:field="*{description}"></textarea></td>
+        </tr>
+    </table>
+    <input type="hidden" name="listId" th:value="${taskList.id}">
+    <input type="hidden" th:field="*{done}" th:value="false">
+    <input type="submit" value="Add">
+</form>
+</body>
+</html>

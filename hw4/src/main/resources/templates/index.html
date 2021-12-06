@@ -1,0 +1,45 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<head>
+    <title>Task Lists</title>
+</head>
+
+<body>
+<h1>Task lists:</h1>
+
+<div>
+    <th:block th:each="taskList : ${taskLists}">
+        <div>
+            <div style="margin: 0; display: inline-block">
+                <h3 style="margin: 0; display: inline-block">
+                    <a th:href="'/task-list?listId=' + ${taskList.id}" th:text="${taskList.title}"></a>
+                </h3>
+                <div style="margin: 0; display: inline-block"
+                     th:text="' (' + ${sizes[taskList.id]} + ' tasks, ' + ${dones[taskList.id]} + ' dones)'"></div>
+            </div>
+            <div th:text="${taskList.description}"></div>
+            <form style="margin: 0; display: inline-block" method="POST" action="/delete-task-list">
+                <input type="submit" value="Delete">
+                <input type="hidden" name="id" th:value="${taskList.id}">
+            </form>
+        </div>
+    </th:block>
+</div>
+
+<h1>Add new task list</h1>
+<form th:object="${taskList}" method="POST" action="/add-task-list">
+    <table>
+        <tr>
+            <td><label for="title">Title:</label></td>
+            <td><input required="required" id="title" type="text" th:field="*{title}"/></td>
+        </tr>
+        <tr>
+            <td><label for="description">Description:</label></td>
+            <td><textarea id="description" th:field="*{description}"></textarea></td>
+        </tr>
+    </table>
+    <input type="submit" value="Add Task">
+</form>
+</body>
+
+</html>
